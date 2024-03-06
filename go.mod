@@ -10,6 +10,10 @@ require (
 	github.com/stretchr/testify v1.8.4
 )
 
+replace github.com/ava-labs/avalanchego v1.11.1 => github.com/vtamara/avalanchego v1.11.2-0.20240305234759-600eca81c3cf
+
+replace github.com/ava-labs/subnet-evm v0.6.1 => github.com/vtamara/subnet-evm v0.6.2-0.20240305235543-a741571b3cd9
+
 require (
 	github.com/DataDog/zstd v1.5.2 // indirect
 	github.com/VictoriaMetrics/fastcache v1.10.0 // indirect
@@ -124,3 +128,5 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/cockroachdb/pebble v0.0.0-20230209160836-829675f94811 => github.com/vtamara/pebble v0.0.0-20240304195718-33499868d65e
