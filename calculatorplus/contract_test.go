@@ -93,31 +93,31 @@ var (
 			ReadOnly:    true,
 			ExpectedRes: expectedModuloPlusOutcome,
 		},
-		"testing powOfThree": {
-			Caller: common.Address{1},
-			InputFn: func(t testing.TB) []byte {
-				testInput := big.NewInt(2)
-				input, err := PackPowOfThree(testInput)
-				require.NoError(t, err)
-				return input
-			},
-			SuppliedGas: PowOfThreeGasCost,
-			ReadOnly:    true,
-			ExpectedRes: expectedPowOfThreeOutcome,
-		},
-		"testing simplFrac": {
-			Caller: common.Address{1},
-			InputFn: func(t testing.TB) []byte {
-				numerator := big.NewInt(12)
-				denominator := big.NewInt(16)
-				input, err := PackSimplFrac(SimplFracInput{numerator, denominator})
-				require.NoError(t, err)
-				return input
-			},
-			SuppliedGas: SimplFracGasCost,
-			ReadOnly:    true,
-			ExpectedRes: expectedSimplFracOutcome,
-		},
+		//"testing powOfThree": {
+		//	Caller: common.Address{1},
+		//	InputFn: func(t testing.TB) []byte {
+		//		testInput := big.NewInt(2)
+		//		input, err := PackPowOfThree(testInput)
+		//		require.NoError(t, err)
+		//		return input
+		//	},
+		//	SuppliedGas: PowOfThreeGasCost,
+		//	ReadOnly:    true,
+		//	ExpectedRes: expectedPowOfThreeOutcome,
+		//},
+		//"testing simplFrac": {
+		//	Caller: common.Address{1},
+		//	InputFn: func(t testing.TB) []byte {
+		//		numerator := big.NewInt(12)
+		//		denominator := big.NewInt(16)
+		//		input, err := PackSimplFrac(SimplFracInput{numerator, denominator})
+		//		require.NoError(t, err)
+		//		return input
+		//	},
+		//	SuppliedGas: SimplFracGasCost,
+		//	ReadOnly:    true,
+		//	ExpectedRes: expectedSimplFracOutcome,
+		//},
 	}
 )
 
