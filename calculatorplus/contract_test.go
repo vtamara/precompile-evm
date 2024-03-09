@@ -41,7 +41,7 @@ var (
 			InputFn: func(t testing.TB) []byte {
 				// CUSTOM CODE STARTS HERE
 				// populate test input here
-				testInput := ModuloPlusInput{}
+				testInput := ModuloPlusInput{big.NewInt(1), big.NewInt(1)}
 				input, err := PackModuloPlus(testInput)
 				require.NoError(t, err)
 				return input
@@ -55,7 +55,7 @@ var (
 			InputFn: func(t testing.TB) []byte {
 				// CUSTOM CODE STARTS HERE
 				// set test input to a value here
-				var testInput *big.Int
+				testInput := big.NewInt(1)
 				testInput = new(big.Int)
 				input, err := PackPowOfThree(testInput)
 				require.NoError(t, err)
@@ -70,7 +70,7 @@ var (
 			InputFn: func(t testing.TB) []byte {
 				// CUSTOM CODE STARTS HERE
 				// populate test input here
-				testInput := SimplFracInput{}
+				testInput := SimplFracInput{big.NewInt(1), big.NewInt(1)}
 				input, err := PackSimplFrac(testInput)
 				require.NoError(t, err)
 				return input
