@@ -399,8 +399,8 @@ github.com/valyala/fasthttp v1.6.0/go.mod h1:FstJa9V+Pj9vQ7OJie2qMHdwemEDaDiSdBn
 github.com/valyala/fasttemplate v1.0.1/go.mod h1:UQGH1tvbgY+Nz5t2n7tXsz52dQxojPUpymEIMZ47gx8=
 github.com/valyala/fasttemplate v1.2.1/go.mod h1:KHLXt3tVN2HBp8eijSv/kGJopbvo7S+qRAEEKiv+SiQ=
 github.com/valyala/tcplisten v0.0.0-20161114210144-ceec8f93295a/go.mod h1:v3UYOV9WzVtRmSR+PDvWpU/qWl4Wa5LApYYX4ZtKbio=
-github.com/vtamara/avalanchego v1.10.12-0.20240306024523-2c91b9ade3a5 h1:YnsBkmp+HyWCOq6iJe121PmYPemiJN+vfaxbybh/4jQ=
-github.com/vtamara/avalanchego v1.10.12-0.20240306024523-2c91b9ade3a5/go.mod h1:azUNjLgSzdWG17IBNTiYsyunb30lI742lFN5A4em0VY=
+github.com/vtamara/avalanchego v1.10.12-0.20240312230244-d6b0f04f8e06 h1:AFKZ9egSt2gnnqo/MRN2A50pO65MdhfILaiwWQXmxQU=
+github.com/vtamara/avalanchego v1.10.12-0.20240312230244-d6b0f04f8e06/go.mod h1:F7QMdJ1OLJtT9UwrbyRqLkHOyjaqw7HxeW9g3bFVlVc=
 github.com/vtamara/pebble v0.0.0-20240304195718-33499868d65e h1:SXkMhbjjR0dGmjPW+2nfINTR8SOWcYNMqf5WVPrz56o=
 github.com/vtamara/pebble v0.0.0-20240304195718-33499868d65e/go.mod h1:Nb5lgvnQ2+oGlE/EyZy4+2/CxRh9KfvCXnag1vtpxVM=
 github.com/vtamara/subnet-evm v0.5.7-0.20240313184100-56725b861c41 h1:tTjquDAZaDltLbruz0TdhHDggPAwCjVUpmohPbo49ys=

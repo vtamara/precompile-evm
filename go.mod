@@ -11,7 +11,7 @@ require (
 	go.uber.org/mock v0.2.0
 )
 
-replace github.com/ava-labs/avalanchego v1.10.11 => github.com/vtamara/avalanchego v1.10.12-0.20240306024523-2c91b9ade3a5
+replace github.com/ava-labs/avalanchego v1.10.11 => github.com/vtamara/avalanchego v1.10.12-0.20240312230244-d6b0f04f8e06
 
 replace github.com/ava-labs/subnet-evm v0.5.6 => github.com/vtamara/subnet-evm v0.5.7-0.20240313184100-56725b861c41
 
