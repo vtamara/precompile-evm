@@ -124,8 +124,13 @@ func moduloPlus(accessibleState contract.AccessibleState, caller common.Address,
 	_ = inputStruct             // CUSTOM CODE OPERATES ON INPUT
 	var output ModuloPlusOutput // CUSTOM CODE FOR AN OUTPUT
 
-	output.Remainder= big.NewInt(0)
-	output.Multiple, output.Remainder = big.NewInt(0).DivMod(inputStruct.Dividend, inputStruct.Divisor, output.Remainder)
+	if (inputStruct.Divisor.Cmp(big.NewInt(0)) == 0) {
+		output.Remainder = big.NewInt(0)
+		output.Multiple= big.NewInt(0)
+	} else {
+		output.Remainder= big.NewInt(0)
+		output.Multiple, output.Remainder = big.NewInt(0).DivMod(inputStruct.Dividend, inputStruct.Divisor, output.Remainder)
+	}
 
 	packedOutput, err := PackModuloPlusOutput(output)
 	if err != nil {

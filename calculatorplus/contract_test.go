@@ -5,6 +5,7 @@
 package calculatorplus
 
 import (
+	"crypto/rand"
 	"math/big"
 	"testing"
 
@@ -28,12 +29,16 @@ var (
 // allowlist, readOnly behaviour, and gas cost. You should write your own
 // tests for specific cases.
 var (
-	// 3/2
+	// 11/4
 	expectedModuloPlusOutcome, _ = PackModuloPlusOutput(ModuloPlusOutput{big.NewInt(2), big.NewInt(3)}) 
+	// 11/0
+	expectedModuloPlusDiv0Outcome, _ = PackModuloPlusOutput(ModuloPlusOutput{big.NewInt(0), big.NewInt(0)}) 
 	// 2
 	expectedPowOfThreeOutcome, _  = PackPowOfThreeOutput(PowOfThreeOutput{big.NewInt(4), big.NewInt(8), big.NewInt(16)})
 	// 12/16
 	expectedSimplFracOutcome, _       = PackSimplFracOutput(SimplFracOutput{big.NewInt(3), big.NewInt(4)})
+	// 12/0
+	expectedSimplFracDen0Outcome, _       = PackSimplFracOutput(SimplFracOutput{big.NewInt(0), big.NewInt(0)})
 
 	tests = map[string]testutils.PrecompileTest{
 		"insufficient gas for moduloPlus should fail": {
@@ -93,6 +98,21 @@ var (
 			ReadOnly:    true,
 			ExpectedRes: expectedModuloPlusOutcome,
 		},
+		"testing moduloPlus divisor 0": {
+			Caller: common.Address{1},
+			InputFn: func(t testing.TB) []byte {
+				dividend := big.NewInt(11)
+				divisor := big.NewInt(0)
+				testInput :=  ModuloPlusInput{dividend, divisor}
+				input, err := PackModuloPlus(testInput)
+				require.NoError(t, err)
+				return input
+			},
+			SuppliedGas: ModuloPlusGasCost,
+			ReadOnly:    true,
+			ExpectedRes: expectedModuloPlusDiv0Outcome,
+		},
+
 		"testing powOfThree": {
 			Caller: common.Address{1},
 			InputFn: func(t testing.TB) []byte {
@@ -118,11 +138,26 @@ var (
 			ReadOnly:    true,
 			ExpectedRes: expectedSimplFracOutcome,
 		},
+		"testing simplFrac den 0": {
+			Caller: common.Address{1},
+			InputFn: func(t testing.TB) []byte {
+				numerator := big.NewInt(12)
+				denominator := big.NewInt(0)
+				input, err := PackSimplFrac(SimplFracInput{numerator, denominator})
+				require.NoError(t, err)
+				return input
+			},
+			SuppliedGas: SimplFracGasCost,
+			ReadOnly:    true,
+			ExpectedRes: expectedSimplFracDen0Outcome,
+		},
+
 	}
 )
 
 // TestCalculatorplusRun tests the Run function of the precompile contract.
 func TestCalculatorplusRun(t *testing.T) {
+
 	// Run tests.
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
@@ -130,6 +165,81 @@ func TestCalculatorplusRun(t *testing.T) {
 		})
 	}
 
+	N := 1_000
+	n := new(big.Int).Exp(big.NewInt(2), big.NewInt(int64(128)), nil)
+
+	// Fuzzing N times
+	for i := 0; i < N; i++ {
+		quotient, err := rand.Int(rand.Reader, n)
+		remainder, err := rand.Int(rand.Reader, n)
+		divisor, err := rand.Int(rand.Reader, n)
+		if remainder.Cmp(divisor) >= 0 {
+			remainder = big.NewInt(0).Sub(divisor, big.NewInt(1))
+		} 
+		
+		// Expected outcome for ModuloPlus
+		dividend := big.NewInt(0).Add(big.NewInt(0).Mul(quotient, divisor), remainder)
+		expectedRandOutcome, _ := PackModuloPlusOutput(ModuloPlusOutput{quotient, remainder}) 
+		randModuloPlusInput := ModuloPlusInput{dividend, divisor}
+		randInput, err := PackModuloPlus(randModuloPlusInput)
+		require.NoError(t, err)
+		randTest := testutils.PrecompileTest{
+			Caller:      common.Address{1},
+			Input:       randInput,
+			SuppliedGas: ModuloPlusGasCost,
+			ReadOnly:    true,
+			ExpectedRes: expectedRandOutcome,
+		}
+		t.Run("Testing random moduloPlus!", func(t *testing.T) {
+			randTest.Run(t, Module, state.NewTestStateDB(t))
+		})
+
+		// Expected outcome for powThreee using remainder as base
+		r2 := big.NewInt(0).Mul(remainder, remainder)
+		r3 := big.NewInt(0).Mul(remainder, r2)
+		r4 := big.NewInt(0).Mul(remainder, r3)
+	  expectedRandOutcome, _  = PackPowOfThreeOutput(PowOfThreeOutput{r2, r3, r4})
+		randInput, err = PackPowOfThree(remainder)
+		require.NoError(t, err)
+		randTest = testutils.PrecompileTest{
+			Caller:      common.Address{1},
+			Input:       randInput,
+			SuppliedGas: PowOfThreeGasCost,
+			ReadOnly:    true,
+			ExpectedRes: expectedRandOutcome,
+		}
+		t.Run("Testing random powOfThree!", func(t *testing.T) {
+			randTest.Run(t, Module, state.NewTestStateDB(t))
+		})
+
+		// Expected outcome for simplFrac using remainder as gcd and adjusintg
+		// divisor and dividend to become primes
+		gcd := remainder
+		pn := divisor 
+		for ; !pn.ProbablyPrime(20); pn.Add(pn,big.NewInt(1)) {
+		}
+		pd := dividend
+		for  ;!pd.ProbablyPrime(20); pd.Add(pd,big.NewInt(1)) {
+		}
+		pd = big.NewInt(7) // Problematic to use big prime
+		num := big.NewInt(0).Mul(pn, gcd)
+		den := big.NewInt(0).Mul(pd, gcd) 
+	  expectedRandOutcome, _  = PackSimplFracOutput(SimplFracOutput{pn, pd})
+		randInput, err = PackSimplFrac(SimplFracInput{num, den})
+		require.NoError(t, err)
+		randTest = testutils.PrecompileTest{
+			Caller:      common.Address{1},
+			Input:       randInput,
+			SuppliedGas: SimplFracGasCost,
+			ReadOnly:    true,
+			ExpectedRes: expectedRandOutcome,
+		}
+		t.Run("Testing random simplFrac!", func(t *testing.T) {
+			randTest.Run(t, Module, state.NewTestStateDB(t))
+		})
+
+
+	}
 
 }
 
