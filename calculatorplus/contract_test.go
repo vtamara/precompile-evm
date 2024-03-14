@@ -29,7 +29,7 @@ var (
 // tests for specific cases.
 var (
 	// 3/2
-	expectedModuloPlusOutcome, _ = PackModuloPlusOutput(ModuloPlusOutput{big.NewInt(1), big.NewInt(1)}) 
+	expectedModuloPlusOutcome, _ = PackModuloPlusOutput(ModuloPlusOutput{big.NewInt(2), big.NewInt(3)}) 
 	// 2
 	expectedPowOfThreeOutcome, _  = PackPowOfThreeOutput(PowOfThreeOutput{big.NewInt(4), big.NewInt(8), big.NewInt(16)})
 	// 12/16
@@ -41,7 +41,7 @@ var (
 			InputFn: func(t testing.TB) []byte {
 				// CUSTOM CODE STARTS HERE
 				// populate test input here
-				testInput := ModuloPlusInput{}
+				testInput := ModuloPlusInput{big.NewInt(1), big.NewInt(3)}
 				input, err := PackModuloPlus(testInput)
 				require.NoError(t, err)
 				return input
@@ -70,7 +70,7 @@ var (
 			InputFn: func(t testing.TB) []byte {
 				// CUSTOM CODE STARTS HERE
 				// populate test input here
-				testInput := SimplFracInput{}
+				testInput := SimplFracInput{big.NewInt(1), big.NewInt(1)}
 				input, err := PackSimplFrac(testInput)
 				require.NoError(t, err)
 				return input
@@ -82,8 +82,8 @@ var (
 		"testing moduloPlus": {
 			Caller: common.Address{1},
 			InputFn: func(t testing.TB) []byte {
-				dividend := big.NewInt(3)
-				divisor := big.NewInt(2)
+				dividend := big.NewInt(11)
+				divisor := big.NewInt(4)
 				testInput :=  ModuloPlusInput{dividend, divisor}
 				input, err := PackModuloPlus(testInput)
 				require.NoError(t, err)
