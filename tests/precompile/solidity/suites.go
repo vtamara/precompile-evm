@@ -5,7 +5,11 @@
 package solidity
 
 import (
-	"github.com/onsi/ginkgo/v2"
+	"context"
+	"time"
+
+	"github.com/ava-labs/subnet-evm/tests/utils"
+	ginkgo "github.com/onsi/ginkgo/v2"
 )
 
 // Registers the Asynchronized Precompile Tests
@@ -26,7 +30,7 @@ func RegisterAsyncTests() {
 	*/
 	_ = ginkgo.Describe("[Asynchronized Precompile Tests]", func() {
 		// Uncomment below and register the ping test first
-		// utils.RegisterPingTest()
+		utils.RegisterPingTest()
 
 		// ADD YOUR PRECOMPILE HERE
 		/*
@@ -40,6 +44,12 @@ func RegisterAsyncTests() {
 				runDefaultHardhatTests(ctx, blockchainID, "{your_precompile}")
 			})
 		*/
+		ginkgo.It("StringStore", ginkgo.Label("Precompile"), ginkgo.Label("StringStore"), func() {
+			ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+			defer cancel()
+
+			utils.RunDefaultHardhatTests(ctx, "StringStore")
+		})
 	})
 }
 
